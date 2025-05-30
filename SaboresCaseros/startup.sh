@@ -1,7 +1,9 @@
 #!/bin/bash
-echo "✅ Activando entorno virtual (si aplica)"
+set -e
 echo "📦 Aplicando migraciones..."
 python manage.py migrate --noinput
 
 echo "🗂️ Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput
+
+echo "✅ Startup script completado"

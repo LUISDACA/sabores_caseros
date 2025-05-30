@@ -23,6 +23,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: 🔍 Mostrar requirements.txt
+        working-directory: SaboresCaseros
+        run: cat requirements.txt
+
+
       - name: 📦 Instalar dependencias
         working-directory: SaboresCaseros
         run: |
