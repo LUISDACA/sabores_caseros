@@ -13,7 +13,6 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DEBUG: 'False'
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      PORT: 8000  # Importante para Gunicorn en Azure
 
     steps:
       - name: 📥 Clonar repositorio
@@ -30,19 +29,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 🔍 Verificar instalación de Django
-        working-directory: SaboresCaseros
-        run: |
-          python -m pip show django || echo "❌ Django no está instalado"
-          python -m pip list
-
-
-      - name: ✅ Verificar instalación de Django
+      - name: 🧪 Verificar instalación de Django
         run: python -m django --version
-
-      - name: ⚙️ Ejecutar script de inicio
-        working-directory: SaboresCaseros
-        run: bash startup.sh
 
       - name: 🚀 Desplegar en Azure App Service
         uses: azure/webapps-deploy@v2
@@ -50,6 +38,3 @@ jobs:
           app-name: saborescaseros-backend
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./SaboresCaseros
-
-      - name: 🧪 Mostrar paquetes instalados (debug)
-        run: pip freeze
