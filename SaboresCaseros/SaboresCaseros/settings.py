@@ -56,7 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SaboresCaseros.wsgi.application'
 
-# Base de datos (Railway o Azure)
+# Base de datos (Railway o Azure),
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL'),
