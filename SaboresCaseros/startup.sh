@@ -1,9 +1,11 @@
 #!/bin/bash
 set -e
+
 echo "📦 Aplicando migraciones..."
 python manage.py migrate --noinput
 
 echo "🗂️ Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput
 
-echo "✅ Startup script completado"
+echo "🚀 Iniciando servidor Gunicorn..."
+gunicorn SaboresCaseros.wsgi:application --bind 0.0.0.0:$PORT
