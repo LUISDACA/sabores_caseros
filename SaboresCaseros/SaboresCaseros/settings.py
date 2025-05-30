@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from decouple import config, Csv
+from decouple import config
 import dj_database_url
+from ast import literal_eval  # ← Importación clave para CORS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -56,7 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SaboresCaseros.wsgi.application'
 
-# Base de datos (Railway o Azure),
+# Base de datos (Railway o Azure)
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL'),
@@ -111,9 +112,8 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS (puede agregarse más dominios separados por coma en .env)
-CORS_ALLOWED_ORIGINS = config(
+# ✅ CORS configurado correctamente usando literal_eval
+CORS_ALLOWED_ORIGINS = literal_eval(config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173',
-    cast=Csv
-)
+    default='["http://localhost:5173"]'
+))
