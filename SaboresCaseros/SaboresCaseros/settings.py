@@ -10,7 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Clave secreta y modo debug desde .env
 SECRET_KEY = config('SECRET_KEY', default='clave-insegura')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+ALLOWED_HOSTS = [
+    'saborescaseros-backend.azurewebsites.net',
+    '127.0.0.1',
+    'localhost',
+]
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
