@@ -30,6 +30,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: 🔍 Verificar instalación de Django
+        working-directory: SaboresCaseros
+        run: |
+          python -m pip show django || echo "❌ Django no está instalado"
+          python -m pip list
+
+
       - name: ✅ Verificar instalación de Django
         run: python -m django --version
 
