@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 from decouple import config
 import dj_database_url
-from ast import literal_eval  # ← Importación clave para CORS
+from ast import literal_eval  
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,7 +117,6 @@ SIMPLE_JWT = {
 }
 
 # ✅ CORS configurado correctamente usando literal_eval
-CORS_ALLOWED_ORIGINS = literal_eval(config(
-    'CORS_ALLOWED_ORIGINS',
-    default='["http://localhost:5173"]'
-))
+CORS_ALLOWED_ORIGINS = literal_eval(
+    config('CORS_ALLOWED_ORIGINS', default='["http://localhost:5173"]')
+)
