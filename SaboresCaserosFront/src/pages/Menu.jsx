@@ -93,10 +93,10 @@ const Menu = () => {
                     <div key={platillo.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                         <img
                             src={
-                                platillo.imagen_principal
-                                    ? `${BASE_URL}${platillo.imagen_principal}`
-                                    : `https://via.placeholder.com/400x300?text=${encodeURIComponent(platillo.nombre)}`
-                            }
+                                platillo.imagen_principal?.startsWith('http')
+                                    ? platillo.imagen_principal
+                                    : `${BASE_URL}${platillo.imagen_principal}`
+                                }
                             alt={platillo.nombre}
                             className="w-full h-48 object-cover"
                             onError={(e) => handleImageError(e, platillo)}
