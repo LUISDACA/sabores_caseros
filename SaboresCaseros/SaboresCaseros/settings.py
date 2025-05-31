@@ -119,6 +119,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-""" CORS_ALLOWED_ORIGINS = literal_eval(
-    config('CORS_ALLOWED_ORIGINS', default='["http://localhost:5173"]')
-) """
+CORS_ALLOWED_ORIGINS = [
+    "https://icy-field-005c64a1e.6.azurestaticapps.net/",  # <--- reemplaza con tu frontend real
+]

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'https://saborescaseros-backend-h9dsh5fddaf8epgf.canadaeast-01.azurewebsites.net/api',
     headers: {
         'Content-Type': 'application/json',
     }
