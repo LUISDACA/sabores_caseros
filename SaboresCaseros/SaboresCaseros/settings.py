@@ -11,9 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='clave-insegura')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = [
-    'saborescaseros-backend.azurewebsites.net',
-    '127.0.0.1',
-    'localhost',
+    '*'
 ]
 
 # Aplicaciones instaladas
@@ -63,11 +61,16 @@ WSGI_APPLICATION = 'SaboresCaseros.wsgi.application'
 
 # Base de datos (Railway o Azure)
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbsabores',
+        'USER': 'dbsabores_user',
+        'PASSWORD': 'amkgY2lOGpCmFRxQ4DykIBmc7iAG0anF',
+        'HOST': 'dpg-d0t8njadbo4c739dsfug-a.virginia-postgres.render.com',  # <--- solo el host
+        'PORT': '5432',
+    }
 }
+
 
 # Validadores de contraseña
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,7 +119,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# ✅ CORS configurado correctamente usando literal_eval
-CORS_ALLOWED_ORIGINS = literal_eval(
+""" CORS_ALLOWED_ORIGINS = literal_eval(
     config('CORS_ALLOWED_ORIGINS', default='["http://localhost:5173"]')
-)
+) """
