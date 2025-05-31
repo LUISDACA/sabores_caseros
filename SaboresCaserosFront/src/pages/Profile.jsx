@@ -7,6 +7,9 @@ import useStore from '../store/useStore';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Verifica si la URL ya es absoluta
+const isAbsoluteUrl = (url) => /^https?:\/\//.test(url);
+
 const Profile = () => {
     const user = useStore((state) => state.user);
     const setUser = useStore((state) => state.setUser);
@@ -22,8 +25,9 @@ const Profile = () => {
                 const response = await api.get('/user/me/');
                 reset(response.data);
 
-                if (response.data.foto_perfil) {
-                    setPreviewImage(`${BASE_URL}${response.data.foto_perfil}`);
+                const fotoUrl = response.data.foto_perfil;
+                if (fotoUrl) {
+                    setPreviewImage(isAbsoluteUrl(fotoUrl) ? fotoUrl : `${BASE_URL}${fotoUrl}`);
                 }
 
                 setLoading(false);
@@ -51,20 +55,19 @@ const Profile = () => {
             }
 
             const response = await api.patch('/user/me/', formData, {
-                headers: { 
-                    'Content-Type': 'multipart/form-data'
-                }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             if (response.data) {
+                const fotoUrl = response.data.foto_perfil;
                 const updatedUser = {
                     ...response.data,
-                    foto_perfil: response.data.foto_perfil ? `${BASE_URL}${response.data.foto_perfil}` : null
+                    foto_perfil: fotoUrl ? (isAbsoluteUrl(fotoUrl) ? fotoUrl : `${BASE_URL}${fotoUrl}`) : null
                 };
                 setUser(updatedUser);
 
-                if (response.data.foto_perfil) {
-                    setPreviewImage(`${BASE_URL}${response.data.foto_perfil}`);
+                if (fotoUrl) {
+                    setPreviewImage(isAbsoluteUrl(fotoUrl) ? fotoUrl : `${BASE_URL}${fotoUrl}`);
                 }
             }
 
