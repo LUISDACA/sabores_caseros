@@ -3,16 +3,14 @@ from pathlib import Path
 from datetime import timedelta
 from decouple import config
 import dj_database_url
-from ast import literal_eval  
+from ast import literal_eval
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Clave secreta y modo debug desde .env
+# Seguridad y entorno
 SECRET_KEY = config('SECRET_KEY', default='clave-insegura')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = [
-    '*'
-]
+ALLOWED_HOSTS = ['*']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -24,7 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'sabores',  # Tu app principal
+    'storages',  # 👈 necesario para Azure Blob Storage
+    'sabores',
 ]
 
 # Middleware
@@ -41,7 +40,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'SaboresCaseros.urls'
 
-# Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -59,20 +57,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SaboresCaseros.wsgi.application'
 
-# Base de datos (Railway o Azure)
+# Base de datos (puedes adaptar para PostgreSQL en Azure, Railway, etc.)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dbsabores',
         'USER': 'dbsabores_user',
         'PASSWORD': 'amkgY2lOGpCmFRxQ4DykIBmc7iAG0anF',
-        'HOST': 'dpg-d0t8njadbo4c739dsfug-a.virginia-postgres.render.com',  # <--- solo el host
+        'HOST': 'dpg-d0t8njadbo4c739dsfug-a.virginia-postgres.render.com',
         'PORT': '5432',
     }
 }
 
-
-# Validadores de contraseña
+# Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -87,20 +84,27 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Archivos estáticos y media
+# Archivos estáticos
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Archivos media (modo desarrollo)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Modelo personalizado de usuario
+# Media en modo producción con Azure Blob Storage
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = 'sabores.storage.AzureMediaStorage'
+    AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')
+    AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')
+    AZURE_CONTAINER = config('AZURE_CONTAINER')
+    AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
+    MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/"
+
+# Modelo personalizado
 AUTH_USER_MODEL = 'sabores.Usuario'
 
-# Configuración por defecto para campos automáticos
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Configuración de DRF
+# DRF + JWT
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -110,7 +114,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Configuración de JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -119,6 +122,9 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+# CORS frontend en Azure Static Web Apps
 CORS_ALLOWED_ORIGINS = [
-    "https://icy-field-005c64a1e.6.azurestaticapps.net",  # <--- reemplaza con tu frontend real
+    "https://icy-field-005c64a1e.6.azurestaticapps.net",
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
