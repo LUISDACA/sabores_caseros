@@ -120,5 +120,5 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://icy-field-005c64a1e.6.azurestaticapps.net/",  # <--- reemplaza con tu frontend real
+    "https://icy-field-005c64a1e.6.azurestaticapps.net",  # <--- reemplaza con tu frontend real
 ]
